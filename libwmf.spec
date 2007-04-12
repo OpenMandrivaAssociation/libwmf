@@ -1,0 +1,141 @@
+%define	name	libwmf
+%define	version	0.2.8.4
+%define api 0.2
+%define major	7
+%define release %mkrel 12
+%define libname %mklibname wmf%{api}_ %major
+
+Summary:	A library to convert wmf files
+Name:		%{name}
+Version:	%{version}
+Release:	%{release}
+License:	GPL
+Group:		Text tools
+BuildRequires:	automake1.9
+BuildRequires:	freetype2-devel
+BuildRequires:	gtk+2-devel
+BuildRequires:	png-devel 
+BuildRequires:	libexpat-devel
+BuildRequires:	libjpeg-devel
+BuildRequires:	libx11-devel
+BuildRequires:	libice-devel
+URL:		http://sourceforge.net/projects/wvware/
+Source:		http://download.sourceforge.net/wvware/%{name}-%{version}.tar.bz2
+Patch:		libwmf-0.2.7-libwmf-config.patch
+Patch1:		libwmf-0.2.8.3-CAN-2004-0941.patch
+Patch2:		libwmf-0.2.8.3-CAN-2004-0990.patch
+Patch3:		libwmf-0.2.8.4-intoverflow.patch
+BuildRoot:	%{_tmppath}/%{name}-buildroot
+
+%description
+libwmf is a library for unix like machines that can convert wmf
+files into other formats, currently it supports a gd binding
+to convert to gif, and an X one to draw direct to an X window
+or pixmap.
+
+%package -n %libname
+Summary:	A library to convert wmf files. - library files
+Group:		System/Libraries
+Requires:	urw-fonts
+Conflicts: %name < 0.2.8.4-7
+Requires(post):	gtk+2.0
+Requires(postun): gtk+2.0
+
+%description -n %libname
+This package contains the library needed to run programs dynamically
+linked with libwmf.
+
+%package -n %libname-devel
+Summary:	A library to convert wmf files. - development environment
+Group:		Development/C
+Requires:	%libname = %{version}
+Provides:	libwmf-devel = %{version} libwmf0.2-devel = %{version}
+Obsoletes:	libwmf-devel < %{version}-%{release}
+
+%description -n %libname-devel
+libwmf is a library for unix like machines that can convert wmf
+files into other formats, currently it supports a gd binding
+to convert to gif, and an X one to draw direct to an X window
+or pixmap.
+
+Install libwmf-devel if you need to compile an application with libwmf
+support.
+
+%prep
+%setup -q -n %{name}-%{version}
+%patch -p1 -b .fpons
+%patch1 -p1 -b .can-2004-0941
+%patch2 -p1 -b .can-2004-0990
+%patch3 -p1 -b .cve-2006-3376
+# libtoolize on un-common architectures
+aclocal-1.9
+libtoolize --copy --force
+autoconf
+automake-1.9
+CFLAGS=$RPM_OPT_FLAGS ./configure \
+	--prefix=%{_prefix} \
+	--libdir=%{_libdir} \
+	--with-ttf=%{_prefix}
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT installed-docs
+make install DESTDIR=$RPM_BUILD_ROOT
+
+mv $RPM_BUILD_ROOT%{_prefix}/share/doc/* installed-docs
+
+#gw no windows line endings
+perl -pi -e 's/\r//' $(find installed-docs -type f )
+
+# remove anything relevant to fonts.
+rm -rf $RPM_BUILD_ROOT%{_bindir}/libwmf-fontmap $RPM_BUILD_ROOT%{_datadir}/libwmf
+# remove static libraries.
+rm -f $RPM_BUILD_ROOT%{_libdir}/libwmf*.a $RPM_BUILD_ROOT%{_libdir}/gtk-*/*/*/*.a
+
+# multiarch support
+%multiarch_binaries $RPM_BUILD_ROOT%{_bindir}/libwmf-config
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post -n %libname
+/sbin/ldconfig
+%_bindir/gdk-pixbuf-query-loaders %_lib > %{_sysconfdir}/gtk-2.0/gdk-pixbuf.loaders.%_lib
+
+%postun -n %libname
+/sbin/ldconfig
+if [ -x  %_bindir/gdk-pixbuf-query-loaders ]; then
+%_bindir/gdk-pixbuf-query-loaders %_lib > %{_sysconfdir}/gtk-2.0/gdk-pixbuf.loaders.%_lib
+fi
+
+%files
+# beware not to take gd files here!
+%defattr(-,root,root)
+%docdir COPYING
+%{_bindir}/wmf2*
+
+%files -n %libname
+# beware not to take gd files here!
+%defattr(-,root,root)
+%doc COPYING
+%{_libdir}/libwmf*-%{api}.so.%{major}*
+%_libdir/gtk-2.0/*/loaders/io-wmf.so
+%_libdir/gtk-2.0/*/loaders/io-wmf.la
+
+%files -n %libname-devel
+# beware not to take gd files here!
+%defattr(-,root,root)
+%doc COPYING CREDITS README NEWS
+%doc installed-docs/*
+%doc ChangeLog
+%{_bindir}/libwmf-config
+%multiarch %{multiarch_bindir}/libwmf-config
+%{_libdir}/libwmf.la
+%{_libdir}/libwmf.so
+%{_libdir}/libwmflite.la
+%{_libdir}/libwmflite.so
+%{_includedir}/libwmf
+
+
