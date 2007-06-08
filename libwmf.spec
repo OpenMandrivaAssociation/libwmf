@@ -2,7 +2,7 @@
 %define	version	0.2.8.4
 %define api 0.2
 %define major	7
-%define release %mkrel 12
+%define release %mkrel 13
 %define libname %mklibname wmf%{api}_ %major
 
 Summary:	A library to convert wmf files
@@ -37,7 +37,7 @@ or pixmap.
 Summary:	A library to convert wmf files. - library files
 Group:		System/Libraries
 Requires:	urw-fonts
-Conflicts: %name < 0.2.8.4-7
+Conflicts:	%{name} < 0.2.8.4-7
 Requires(post):	gtk+2.0
 Requires(postun): gtk+2.0
 
@@ -48,7 +48,7 @@ linked with libwmf.
 %package -n %libname-devel
 Summary:	A library to convert wmf files. - development environment
 Group:		Development/C
-Requires:	%libname = %{version}
+Requires:	%{libname} = %{version}-%{release}
 Provides:	libwmf-devel = %{version} libwmf0.2-devel = %{version}
 Obsoletes:	libwmf-devel < %{version}-%{release}
 
@@ -72,7 +72,7 @@ aclocal-1.9
 libtoolize --copy --force
 autoconf
 automake-1.9
-CFLAGS=$RPM_OPT_FLAGS ./configure \
+CFLAGS="%{optflags}" ./configure \
 	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
 	--with-ttf=%{_prefix}
@@ -81,24 +81,24 @@ CFLAGS=$RPM_OPT_FLAGS ./configure \
 make
 
 %install
-rm -rf $RPM_BUILD_ROOT installed-docs
-make install DESTDIR=$RPM_BUILD_ROOT
+rm -rf %{buildroot} installed-docs
+make install DESTDIR=%{buildroot}
 
-mv $RPM_BUILD_ROOT%{_prefix}/share/doc/* installed-docs
+mv %{buildroot}%{_prefix}/share/doc/* installed-docs
 
 #gw no windows line endings
 perl -pi -e 's/\r//' $(find installed-docs -type f )
 
 # remove anything relevant to fonts.
-rm -rf $RPM_BUILD_ROOT%{_bindir}/libwmf-fontmap $RPM_BUILD_ROOT%{_datadir}/libwmf
+rm -rf %{buildroot}%{_bindir}/libwmf-fontmap %{buildroot}%{_datadir}/libwmf
 # remove static libraries.
-rm -f $RPM_BUILD_ROOT%{_libdir}/libwmf*.a $RPM_BUILD_ROOT%{_libdir}/gtk-*/*/*/*.a
+rm -f %{buildroot}%{_libdir}/libwmf*.a %{buildroot}%{_libdir}/gtk-*/*/*/*.a
 
 # multiarch support
-%multiarch_binaries $RPM_BUILD_ROOT%{_bindir}/libwmf-config
+%multiarch_binaries %{buildroot}%{_bindir}/libwmf-config
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %post -n %libname
 /sbin/ldconfig
@@ -137,5 +137,3 @@ fi
 %{_libdir}/libwmflite.la
 %{_libdir}/libwmflite.so
 %{_includedir}/libwmf
-
-
