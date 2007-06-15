@@ -2,7 +2,7 @@
 %define	version	0.2.8.4
 %define api 0.2
 %define major	7
-%define release %mkrel 13
+%define release %mkrel 14
 %define libname %mklibname wmf%{api}_ %major
 
 Summary:	A library to convert wmf files
