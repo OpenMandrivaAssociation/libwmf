@@ -25,6 +25,7 @@ Patch:		libwmf-0.2.7-libwmf-config.patch
 Patch1:		libwmf-0.2.8.3-CAN-2004-0941.patch
 Patch2:		libwmf-0.2.8.3-CAN-2004-0990.patch
 Patch3:		libwmf-0.2.8.4-intoverflow.patch
+Patch4:		libwmf-0.2.8.4-CVE2007-2756.patch
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 
 %description
@@ -67,11 +68,13 @@ support.
 %patch1 -p1 -b .can-2004-0941
 %patch2 -p1 -b .can-2004-0990
 %patch3 -p1 -b .cve-2006-3376
+%patch4 -p1 -b .cve-2007-2756
+
 # libtoolize on un-common architectures
-aclocal-1.9
+aclocal
 libtoolize --copy --force
 autoconf
-automake-1.9
+automake
 CFLAGS="%{optflags}" ./configure \
 	--prefix=%{_prefix} \
 	--libdir=%{_libdir} \
