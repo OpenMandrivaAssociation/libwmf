@@ -26,7 +26,6 @@ Patch1:		libwmf-0.2.8.3-CAN-2004-0941.patch
 Patch2:		libwmf-0.2.8.3-CAN-2004-0990.patch
 Patch3:		libwmf-0.2.8.4-intoverflow.patch
 Patch4:		libwmf-0.2.8.4-CVE2007-2756.patch
-BuildRoot:	%{_tmppath}/%{name}-buildroot
 
 %description
 libwmf is a library for unix like machines that can convert wmf
