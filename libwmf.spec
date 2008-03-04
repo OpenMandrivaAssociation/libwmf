@@ -2,13 +2,12 @@
 %define	version	0.2.8.4
 %define api 0.2
 %define major	7
-%define release %mkrel 15
 %define libname %mklibname wmf%{api}_ %major
 
 Summary:	A library to convert wmf files
 Name:		%{name}
 Version:	%{version}
-Release:	%{release}
+Release:	%mkrel 16
 License:	GPL
 Group:		Text tools
 BuildRequires:	automake1.9
