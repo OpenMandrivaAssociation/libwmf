@@ -103,11 +103,15 @@ rm -f %{buildroot}%{_libdir}/libwmf*.a %{buildroot}%{_libdir}/gtk-*/*/*/*.a
 rm -rf %{buildroot}
 
 %post -n %libname
+%if %mdkversion < 200900
 /sbin/ldconfig
+%endif
 %_bindir/gdk-pixbuf-query-loaders %_lib > %{_sysconfdir}/gtk-2.0/gdk-pixbuf.loaders.%_lib
 
 %postun -n %libname
+%if %mdkversion < 200900
 /sbin/ldconfig
+%endif
 if [ -x  %_bindir/gdk-pixbuf-query-loaders ]; then
 %_bindir/gdk-pixbuf-query-loaders %_lib > %{_sysconfdir}/gtk-2.0/gdk-pixbuf.loaders.%_lib
 fi
