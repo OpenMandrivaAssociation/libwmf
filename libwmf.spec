@@ -7,7 +7,7 @@
 Summary:	A library to convert wmf files
 Name:		%{name}
 Version:	%{version}
-Release:	%mkrel 16
+Release:	%mkrel 17
 License:	GPL
 Group:		Text tools
 BuildRequires:	automake1.9
