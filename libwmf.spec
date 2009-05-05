@@ -7,7 +7,7 @@
 Summary:	A library to convert wmf files
 Name:		%{name}
 Version:	%{version}
-Release:	%mkrel 17
+Release:	%mkrel 18
 License:	GPL
 Group:		Text tools
 BuildRequires:	automake1.9
@@ -25,6 +25,7 @@ Patch1:		libwmf-0.2.8.3-CAN-2004-0941.patch
 Patch2:		libwmf-0.2.8.3-CAN-2004-0990.patch
 Patch3:		libwmf-0.2.8.4-intoverflow.patch
 Patch4:		libwmf-0.2.8.4-CVE2007-2756.patch
+Patch5:		libwmf-0.2.8.4-rh-CVE-2009-1364.diff
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 
 %description
@@ -68,6 +69,7 @@ support.
 %patch2 -p1 -b .can-2004-0990
 %patch3 -p1 -b .cve-2006-3376
 %patch4 -p1 -b .cve-2007-2756
+%patch5 -p0 -b .CVE-2009-1364
 
 # libtoolize on un-common architectures
 aclocal
