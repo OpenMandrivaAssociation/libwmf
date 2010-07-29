@@ -8,7 +8,7 @@
 Summary:	A library to convert wmf files
 Name:		%{name}
 Version:	%{version}
-Release:	%mkrel 21
+Release:	%mkrel 22
 License:	GPL
 Group:		Text tools
 BuildRequires:	freetype2-devel
@@ -25,6 +25,7 @@ Patch2:		libwmf-0.2.8.3-CAN-2004-0990.patch
 Patch3:		libwmf-0.2.8.4-intoverflow.patch
 Patch4:		libwmf-0.2.8.4-CVE2007-2756.patch
 Patch5:		libwmf-0.2.8.4-rh-CVE-2009-1364.diff
+Patch6:		libwmf-0.2.8.4-gdk2.22.patch
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 
 %description
@@ -71,6 +72,7 @@ support.
 %patch3 -p1 -b .cve-2006-3376
 %patch4 -p1 -b .cve-2007-2756
 %patch5 -p0 -b .CVE-2009-1364
+%patch6 -p0 -b .gdk222
 
 %build
 autoreconf -fi
@@ -101,14 +103,14 @@ rm -rf %{buildroot}
 %if %mdkversion < 200900
 /sbin/ldconfig
 %endif
-%_bindir/gdk-pixbuf-query-loaders %_lib > %{_sysconfdir}/gtk-2.0/gdk-pixbuf.loaders.%_lib
+%_bindir/gdk-pixbuf-query-loaders --update-cache
 
 %postun -n %libname
 %if %mdkversion < 200900
 /sbin/ldconfig
 %endif
 if [ -x  %_bindir/gdk-pixbuf-query-loaders ]; then
-%_bindir/gdk-pixbuf-query-loaders %_lib > %{_sysconfdir}/gtk-2.0/gdk-pixbuf.loaders.%_lib
+%_bindir/gdk-pixbuf-query-loaders --update-cache
 fi
 
 %files
@@ -122,8 +124,7 @@ fi
 %defattr(-,root,root)
 %doc COPYING
 %{_libdir}/libwmf*-%{api}.so.%{major}*
-%_libdir/gtk-2.0/loaders/io-wmf.so
-%_libdir/gtk-2.0/loaders/io-wmf.la
+%{_libdir}/gdk-pixbuf-2.0/*/loaders/io-wmf.*
 
 %files -n %develname
 # beware not to take gd files here!
