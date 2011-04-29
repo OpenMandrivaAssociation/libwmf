@@ -133,7 +133,7 @@ fi
 %doc installed-docs/*
 %doc ChangeLog
 %{_bindir}/libwmf-config
-%multiarch %{multiarch_bindir}/libwmf-config
+%{multiarch_bindir}/libwmf-config
 %{_libdir}/libwmf.la
 %{_libdir}/libwmf.so
 %{_libdir}/libwmflite.la
