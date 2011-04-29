@@ -8,7 +8,7 @@
 Summary:	A library to convert wmf files
 Name:		%{name}
 Version:	%{version}
-Release:	%mkrel 22
+Release:	%mkrel 23
 License:	GPL
 Group:		Text tools
 BuildRequires:	freetype2-devel
