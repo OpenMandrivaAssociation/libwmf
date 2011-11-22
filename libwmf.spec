@@ -71,7 +71,7 @@ support.
 
 %prep
 %setup -q
-%patch -p1 -b .fpons
+%patch0 -p1 -b .fpons
 %patch1 -p1 -b .can-2004-0941
 %patch2 -p1 -b .can-2004-0990
 %patch3 -p1 -b .cve-2006-3376
