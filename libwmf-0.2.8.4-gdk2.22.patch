@@ -1,0 +1,26 @@
+--- configure.ac.gdk222	2010-07-29 21:48:37.000000000 +0200
++++ configure.ac	2010-07-29 21:53:40.000000000 +0200
+@@ -744,8 +744,10 @@
+ 
+ if test $LIBWMF_BUILDSTYLE != lite; then
+ 	PKG_CHECK_MODULES(GDK_PIXBUF,gdk-pixbuf-2.0 >= 2.1.2,[
+-		GTK_VERSION=`$PKG_CONFIG --variable=gtk_binary_version gtk+-2.0`
+-		GDK_PIXBUF_DIR="gtk-2.0/$GTK_VERSION/loaders"
++		PKG_CHECK_MODULES(GDK_PIXBUF_222, gdk-pixbuf-2.0 >= 2.21.2, [
++			GDK_PIXBUF_DIR=`$PKG_CONFIG --variable=gdk_pixbuf_moduledir gdk-pixbuf-2.0` ], [
++			GTK_VERSION=`$PKG_CONFIG --variable=gtk_binary_version gtk+-2.0`
++			GDK_PIXBUF_DIR="$libdir/gtk-2.0/$GTK_VERSION/loaders" ])
+ 		wmf_gdk_pixbuf=yes
+ 	],[	wmf_gdk_pixbuf=no
+ 	])
+--- src/Makefile.am.gdk222	2010-07-29 22:04:32.000000000 +0200
++++ src/Makefile.am	2010-07-29 22:05:46.000000000 +0200
+@@ -63,7 +63,7 @@
+ 	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+ 	-release $(LT_RELEASE) -export-dynamic
+ 
+-loaderdir = $(libdir)/$(GDK_PIXBUF_DIR)
++loaderdir = $(GDK_PIXBUF_DIR)
+ 
+ loader_LTLIBRARIES = $(GDK_PIXBUF_PLUGIN)
+ 

@@ -1,0 +1,142 @@
+--- libwmf-0.2.8.3/src/extra/gd/gd_security.c.can-2004-0941	2006-06-29 06:59:12.287496990 -0600
++++ libwmf-0.2.8.3/src/extra/gd/gd_security.c	2006-06-29 06:59:12.287496990 -0600
+@@ -0,0 +1,29 @@
++/*
++   * gd_security.c
++   *
++   * Implements buffer overflow check routines.
++   *
++   * Written 2004, Phil Knirsch.
++   * Based on netpbm fixes by Alan Cox.
++   *
++ */
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <limits.h>
++#include "gd.h"
++
++int overflow2(int a, int b)
++{
++	if(a < 0 || b < 0) {
++		fprintf(stderr, "gd warning: one parameter to a memory allocation multiplication is negative, failing operation gracefully\n");
++		return 1;
++	}
++	if(b == 0)
++		return 0;
++	if(a > INT_MAX / b) {
++		fprintf(stderr, "gd warning: product of memory allocation multiplication would exceed INT_MAX, failing operation gracefully\n");
++		return 1;
++	}
++	return 0;
++}
+--- libwmf-0.2.8.3/src/extra/gd/wbmp.c.can-2004-0941	2001-05-19 07:09:34.000000000 -0600
++++ libwmf-0.2.8.3/src/extra/gd/wbmp.c	2006-06-29 06:59:12.287496990 -0600
+@@ -116,6 +116,14 @@ createwbmp (int width, int height, int c
+   if ((wbmp = (Wbmp *) gdMalloc (sizeof (Wbmp))) == NULL)
+     return (NULL);
+ 
++  if (overflow2(sizeof (int), width)) {
++     gdFree(wbmp);
++     return (NULL);
++  }
++  if (overflow2(sizeof (int) * width, height)) {
++     gdFree(wbmp);
++     return (NULL);
++  }
+   if ((wbmp->bitmap = (int *) gdMalloc (sizeof (int) * width * height)) == NULL)
+     {
+       gdFree (wbmp);
+@@ -176,6 +184,12 @@ readwbmp (int (*getin) (void *in), void 
+   printf ("W: %d, H: %d\n", wbmp->width, wbmp->height);
+ #endif
+ 
++  if (overflow2(sizeof (int), wbmp->width) ||
++    overflow2(sizeof (int) * wbmp->width, wbmp->height))
++    {
++      gdFree(wbmp);
++      return (-1);
++    }
+   if ((wbmp->bitmap = (int *) gdMalloc (sizeof (int) * wbmp->width * wbmp->height)) == NULL)
+     {
+       gdFree (wbmp);
+--- libwmf-0.2.8.3/src/extra/gd/gd_topal.c.can-2004-0941	2001-05-19 07:09:34.000000000 -0600
++++ libwmf-0.2.8.3/src/extra/gd/gd_topal.c	2006-06-29 06:59:12.288496809 -0600
+@@ -669,6 +669,9 @@ select_colors (gdImagePtr im, my_cquanti
+   int i;
+ 
+   /* Allocate workspace for box list */
++  if (overflow2(desired_colors, sizeof (box))) {
++    return;
++  }
+   boxlist = (boxptr) gdMalloc (desired_colors * sizeof (box));
+   /* Initialize one box containing whole space */
+   numboxes = 1;
+--- libwmf-0.2.8.3/src/extra/gd/gd_io_dp.c.can-2004-0941	2001-05-19 07:09:34.000000000 -0600
++++ libwmf-0.2.8.3/src/extra/gd/gd_io_dp.c	2006-06-29 06:59:12.288496809 -0600
+@@ -185,6 +185,9 @@ dynamicSeek (struct gdIOCtx *ctx, const 
+   bytesNeeded = pos;
+   if (bytesNeeded > dp->realSize)
+     {
++      if (overflow2(dp->realSize, 2)) {
++        return FALSE;
++      }
+       if (!gdReallocDynamic (dp, dp->realSize * 2))
+ 	{
+ 	  dp->dataGood = FALSE;
+@@ -356,6 +359,9 @@ appendDynamic (dynamicPtr * dp, const vo
+ 
+   if (bytesNeeded > dp->realSize)
+     {
++      if (overflow2(dp->realSize, 2)) {
++        return FALSE;
++      }
+       if (!gdReallocDynamic (dp, bytesNeeded * 2))
+ 	{
+ 	  dp->dataGood = FALSE;
+--- libwmf-0.2.8.3/src/extra/gd/Makefile.am.can-2004-0941	2006-06-29 07:06:37.525017191 -0600
++++ libwmf-0.2.8.3/src/extra/gd/Makefile.am	2006-06-29 07:07:12.413710434 -0600
+@@ -22,7 +22,7 @@ libgd_la_SOURCES = gd.c gd_gd.c gd_gd2.c
+ 		gd_io_file.c gd_ss.c gd_io_ss.c gd_png.c gd_jpeg.c gdxpm.c \
+ 		gdfontt.c gdfonts.c gdfontmb.c gdfontl.c gdfontg.c \
+ 		gdtables.c gdft.c gdcache.c gdkanji.c wbmp.c \
+-		gd_wbmp.c gdhelpers.c gd_topal.c gd_clip.c
++		gd_wbmp.c gdhelpers.c gd_topal.c gd_clip.c gd_security.c
+ 
+ gddir = $(includedir)/libwmf/gd
+ 
+--- libwmf-0.2.8.3/src/extra/gd/gd.c.can-2004-0941	2002-12-05 13:09:11.000000000 -0700
++++ libwmf-0.2.8.3/src/extra/gd/gd.c	2006-06-29 06:59:12.289496628 -0600
+@@ -1865,6 +1865,12 @@ gdImageCopyResized (gdImagePtr dst, gdIm
+   int *sty;
+   /* We only need to use floating point to determine the correct
+      stretch vector for one line's worth. */
++  if (overflow2(sizeof (int), srcW)) {
++    return;
++  }
++  if (overflow2(sizeof (int), srcH)) {
++    return;
++  }
+   double accum;
+   stx = (int *) gdMalloc (sizeof (int) * srcW);
+   sty = (int *) gdMalloc (sizeof (int) * srcH);
+@@ -2277,6 +2283,9 @@ gdImageFilledPolygon (gdImagePtr im, gdP
+     }
+   if (!im->polyAllocated)
+     {
++      if (overflow2(sizeof (int), n)) {
++        return;
++      }
+       im->polyInts = (int *) gdMalloc (sizeof (int) * n);
+       im->polyAllocated = n;
+     }
+@@ -2371,6 +2380,9 @@ gdImageSetStyle (gdImagePtr im, int *sty
+     {
+       gdFree (im->style);
+     }
++  if (overflow2(sizeof (int), noOfPixels)) {
++    return;
++  }
+   im->style = (int *)
+     gdMalloc (sizeof (int) * noOfPixels);
+   memcpy (im->style, style, sizeof (int) * noOfPixels);
