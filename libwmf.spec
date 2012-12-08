@@ -24,7 +24,7 @@ BuildRequires:	expat-devel
 BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
-BuildRequires:	pkgconfig(libpng15)
+BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(x11)
 Requires(post):	gdk-pixbuf2.0
 Requires(postun): gdk-pixbuf2.0
@@ -90,9 +90,6 @@ autoreconf -fi
 rm -rf %{buildroot} installed-docs
 %makeinstall_std
 
-#remove not packaged files
-find %{buildroot} -name *.la | xargs rm
-
 mv %{buildroot}%{_prefix}/share/doc/* installed-docs
 
 #gw no windows line endings
@@ -123,4 +120,88 @@ rm -rf %{buildroot}%{_bindir}/libwmf-fontmap %{buildroot}%{_datadir}/libwmf
 %{_libdir}/libwmf.so
 %{_libdir}/libwmflite.so
 %{_includedir}/libwmf
+
+
+
+%changelog
+* Fri May 11 2012 Alexander Khrukin <akhrukin@mandriva.org> 0.2.8.4-26
++ Revision: 798257
+- rel bump and rebuild
+
+* Tue Nov 22 2011 Matthew Dawkins <mattydaw@mandriva.org> 0.2.8.4-25
++ Revision: 732478
+- fixed p0 naming
+- rebuild
+- moved gdk_pixbuf loader libs to main pkg
+- removed .la files
+- split out lite lib
+- removed dup doc files across sub pkgs
+- remove defattr
+- removed dup post/un scriptlets, handled by gdk-pixbuf triggers
+- removed old ldconfig scriptlets
+- removed clean section
+- cleaned up spec
+- removed old conflicts/provides
+- converted BRs to pkgconfig provides
+- removed mkrel & BuildRoot
+
+* Thu Sep 29 2011 Tomasz Pawel Gajc <tpg@mandriva.org> 0.2.8.4-24
++ Revision: 701829
+- rebuild for new libpng15
+
+* Fri Apr 29 2011 Funda Wang <fwang@mandriva.org> 0.2.8.4-23
++ Revision: 660667
+- fix usage of multiarch
+
+  + Oden Eriksson <oeriksson@mandriva.com>
+    - mass rebuild
+
+* Thu Jul 29 2010 Funda Wang <fwang@mandriva.org> 0.2.8.4-22mdv2011.0
++ Revision: 563204
+- add patch to build with gdk 2.22
+
+* Thu Jul 29 2010 Funda Wang <fwang@mandriva.org> 0.2.8.4-21mdv2011.0
++ Revision: 563183
+- new devel package name policy
+- adopt to gdk and gtk splitting
+
+* Sun Jan 10 2010 Oden Eriksson <oeriksson@mandriva.com> 0.2.8.4-20mdv2010.1
++ Revision: 488786
+- rebuilt against libjpeg v8
+
+* Sat Aug 15 2009 Oden Eriksson <oeriksson@mandriva.com> 0.2.8.4-19mdv2010.0
++ Revision: 416524
+- rebuilt against libjpeg v7
+
+* Tue May 05 2009 Oden Eriksson <oeriksson@mandriva.com> 0.2.8.4-18mdv2010.0
++ Revision: 372264
+- P5: security fix for CVE-2009-1364 (redhat)
+
+* Tue Jun 17 2008 Thierry Vignaud <tv@mandriva.org> 0.2.8.4-17mdv2009.0
++ Revision: 223041
+- rebuild
+
+  + Pixel <pixel@mandriva.com>
+    - do not call ldconfig in %%post/%%postun, it is now handled by filetriggers
+
+* Tue Mar 04 2008 Oden Eriksson <oeriksson@mandriva.com> 0.2.8.4-16mdv2008.1
++ Revision: 179016
+- rebuild
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - rebuild
+    - kill re-definition of %%buildroot on Pixel's request
+
+  + Olivier Blin <blino@mandriva.org>
+    - restore BuildRoot
+
+* Fri Jun 15 2007 Jérôme Soyer <saispo@mandriva.org> 0.2.8.4-14mdv2008.0
++ Revision: 40000
+- Bump release
+- Fix bug #31483
+
+* Fri Jun 08 2007 Tomasz Pawel Gajc <tpg@mandriva.org> 0.2.8.4-13mdv2008.0
++ Revision: 37261
+- rebuild for expat
+- spec file clean
 
