@@ -19,6 +19,7 @@ Patch3:		libwmf-0.2.8.4-intoverflow.patch
 Patch4:		libwmf-0.2.8.4-CVE2007-2756.patch
 Patch5:		libwmf-0.2.8.4-rh-CVE-2009-1364.diff
 Patch6:		libwmf-0.2.8.4-gdk2.22.patch
+Patch7:		libwmf-automake-1.13.patch
 
 BuildRequires:	expat-devel
 BuildRequires:	jpeg-devel
@@ -78,6 +79,7 @@ support.
 %patch4 -p1 -b .cve-2007-2756
 %patch5 -p0 -b .CVE-2009-1364
 %patch6 -p0 -b .gdk222
+%patch7 -p1 -b .am113~
 
 %build
 autoreconf -fi
