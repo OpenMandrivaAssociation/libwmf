@@ -1,5 +1,5 @@
---- configure.ac.gdk222	2010-07-29 21:48:37.000000000 +0200
-+++ configure.ac	2010-07-29 21:53:40.000000000 +0200
+--- ./configure.ac.gdk222	2010-07-29 21:48:37.000000000 +0200
++++ ./configure.ac	2010-07-29 21:53:40.000000000 +0200
 @@ -744,8 +744,10 @@
  
  if test $LIBWMF_BUILDSTYLE != lite; then
@@ -13,8 +13,8 @@
  		wmf_gdk_pixbuf=yes
  	],[	wmf_gdk_pixbuf=no
  	])
---- src/Makefile.am.gdk222	2010-07-29 22:04:32.000000000 +0200
-+++ src/Makefile.am	2010-07-29 22:05:46.000000000 +0200
+--- ./src/Makefile.am.gdk222	2010-07-29 22:04:32.000000000 +0200
++++ ./src/Makefile.am	2010-07-29 22:05:46.000000000 +0200
 @@ -63,7 +63,7 @@
  	-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
  	-release $(LT_RELEASE) -export-dynamic
