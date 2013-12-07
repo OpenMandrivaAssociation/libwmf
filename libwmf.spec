@@ -7,7 +7,7 @@
 Summary:	A library to convert wmf files
 Name:		libwmf
 Version:	0.2.8.4
-Release:	28
+Release:	29
 License:	GPLv2
 Group:		Text tools
 Url:		http://sourceforge.net/projects/wvware/
