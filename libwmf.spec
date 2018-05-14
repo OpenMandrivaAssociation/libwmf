@@ -7,7 +7,7 @@
 Summary:	A library to convert wmf files
 Name:		libwmf
 Version:	0.2.8.4
-Release:	37
+Release:	38
 License:	GPLv2
 Group:		Text tools
 Url:		http://sourceforge.net/projects/wvware/
@@ -20,6 +20,7 @@ Patch4:		libwmf-0.2.8.4-CVE2007-2756.patch
 Patch5:		libwmf-0.2.8.4-rh-CVE-2009-1364.diff
 Patch6:		libwmf-0.2.8.4-gdk2.22.patch
 Patch7:		libwmf-automake-1.13.patch
+Patch8:		libwmf-0.2.8.4-freetype-2.9.1.patch
 
 BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(expat)
@@ -75,7 +76,7 @@ rm -f configure configure.in
 autoreconf -fi
 
 %build
-%configure2_5x \
+%configure \
 	--disable-static
 
 %make
@@ -91,11 +92,8 @@ perl -pi -e 's/\r//' $(find installed-docs -type f )
 # remove anything relevant to fonts.
 rm -rf %{buildroot}%{_bindir}/libwmf-fontmap %{buildroot}%{_datadir}/libwmf
 
-# multiarch support
-%multiarch_binaries %{buildroot}%{_bindir}/libwmf-config
-
 %files
-%docdir COPYING
+%license COPYING
 %{_bindir}/wmf2*
 %{_libdir}/gdk-pixbuf-2.0/*/loaders/io-wmf.*
 
@@ -109,8 +107,6 @@ rm -rf %{buildroot}%{_bindir}/libwmf-fontmap %{buildroot}%{_datadir}/libwmf
 %doc CREDITS README NEWS ChangeLog
 %doc installed-docs/*
 %{_bindir}/libwmf-config
-%{multiarch_bindir}/libwmf-config
 %{_libdir}/libwmf.so
 %{_libdir}/libwmflite.so
 %{_includedir}/libwmf
-
