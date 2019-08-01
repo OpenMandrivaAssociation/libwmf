@@ -6,21 +6,12 @@
 
 Summary:	A library to convert wmf files
 Name:		libwmf
-Version:	0.2.8.4
-Release:	40
+Version:	0.2.12
+Release:	1
 License:	GPLv2
 Group:		Text tools
-Url:		http://sourceforge.net/projects/wvware/
-Source0:	http://download.sourceforge.net/wvware/%{name}-%{version}.tar.bz2
-Patch0:		libwmf-0.2.7-libwmf-config.patch
-Patch1:		libwmf-0.2.8.3-CAN-2004-0941.patch
-Patch2:		libwmf-0.2.8.3-CAN-2004-0990.patch
-Patch3:		libwmf-0.2.8.4-intoverflow.patch
-Patch4:		libwmf-0.2.8.4-CVE2007-2756.patch
-Patch5:		libwmf-0.2.8.4-rh-CVE-2009-1364.diff
-Patch6:		libwmf-0.2.8.4-gdk2.22.patch
-Patch7:		libwmf-automake-1.13.patch
-Patch8:		libwmf-0.2.8.4-freetype-2.9.1.patch
+Url:		https://github.com/caolanm/libwmf
+Source0:	https://github.com/caolanm/libwmf/archive/v%{version}.tar.gz
 
 BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(expat)
@@ -70,7 +61,6 @@ support.
 
 %prep
 %setup -q
-%apply_patches
 
 rm -f configure configure.in
 autoreconf -fi
