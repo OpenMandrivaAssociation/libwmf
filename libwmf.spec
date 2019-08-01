@@ -11,7 +11,7 @@ Release:	1
 License:	GPLv2
 Group:		Text tools
 Url:		https://github.com/caolanm/libwmf
-Source0:	https://github.com/caolanm/libwmf/archive/v%{version}.tar.gz
+Source0:	https://github.com/caolanm/libwmf/archive/v%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(expat)
