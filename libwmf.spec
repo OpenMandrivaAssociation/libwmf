@@ -62,7 +62,6 @@ support.
 %prep
 %setup -q
 
-rm -f configure configure.in
 autoreconf -fi
 
 %build
