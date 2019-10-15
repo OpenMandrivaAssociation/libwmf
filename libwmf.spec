@@ -68,6 +68,7 @@ autoreconf -fi -Ipatches
 
 %build
 %configure \
+	--disable-dependency-tracking \
 	--disable-static
 
 %make_build
