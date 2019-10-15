@@ -18,6 +18,7 @@ BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
+BuildRequires:	pkgconfig(gdlib)
 BuildRequires:	pkgconfig(libpng)
 BuildRequires:	pkgconfig(x11)
 Requires(post,postun):	gdk-pixbuf2.0
