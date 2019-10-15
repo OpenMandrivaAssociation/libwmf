@@ -62,7 +62,7 @@ support.
 %prep
 %setup -q
 
-autoreconf -fi
+autoreconf -vif
 
 %build
 %configure \
