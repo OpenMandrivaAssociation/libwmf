@@ -68,18 +68,32 @@ autoreconf -fi -Ipatches
 %configure \
 	--disable-static
 
-%make
+%make_build
 
 %install
-%makeinstall_std
+rm -rf %{buildroot} installed-docs
+%make_install
 
-mv %{buildroot}%{_prefix}/share/doc/* installed-docs
-
-#gw no windows line endings
-perl -pi -e 's/\r//' $(find installed-docs -type f )
-
+# remove gd headers
+rm -rf %{buildroot}%{_includedir}/libwmf/gd
+# remove files that should not be installed
+find doc -name "Makefile*" -delete
 # remove anything relevant to fonts.
 rm -rf %{buildroot}%{_bindir}/libwmf-fontmap %{buildroot}%{_datadir}/libwmf
+# remove static libraries.
+find %{buildroot} -name *.la | xargs rm
+
+# multiarch support
+%multiarch_binaries %{buildroot}%{_bindir}/libwmf-config
+
+%post -n %{libname}
+%{_bindir}/gdk-pixbuf-query-loaders --update-cache
+
+%postun -n %{libname}
+if [ -x  %{_bindir}/gdk-pixbuf-query-loaders ]; then
+%{_bindir}/gdk-pixbuf-query-loaders --update-cache
+fi
+
 
 %files
 %license COPYING
