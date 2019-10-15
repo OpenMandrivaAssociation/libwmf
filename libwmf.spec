@@ -64,7 +64,7 @@ support.
 %prep
 %setup -q
 
-autoreconf -fi -Ipatches
+autoreconf -vif -Ipatches
 
 %build
 %configure \
