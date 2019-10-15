@@ -13,6 +13,7 @@ Group:		Text tools
 Url:		https://github.com/caolanm/libwmf
 Source0:	https://github.com/caolanm/libwmf/archive/v%{version}/%{name}-%{version}.tar.gz
 
+BuildRequires:	libtool
 BuildRequires:	jpeg-devel
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(freetype2)
