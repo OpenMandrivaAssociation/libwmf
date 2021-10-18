@@ -4,18 +4,17 @@
 %define litename %mklibname wmflite %{api} %{major}
 %define devname %mklibname -d wmf
 
-%define _disable_rebuild_configure %nil
-
 Summary:	A library to convert wmf files
 Name:		libwmf
 Version:	0.2.12
-Release:	1
+Release:	2
 License:	GPLv2
 Group:		Text tools
 Url:		https://github.com/caolanm/libwmf
 Source0:	https://github.com/caolanm/libwmf/archive/v%{version}/%{name}-%{version}.tar.gz
-
-BuildRequires:	jpeg-devel
+Patch0:		https://github.com/caolanm/libwmf/commit/9bf7ac1a3d56ba176a6c52f792e82c86d01f42f1.patch
+Patch1:		libwmf-0.2.12-fix-build-internal-gd.patch
+BuildRequires:	pkgconfig(libjpeg)
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
 BuildRequires:	pkgconfig(libpng)
@@ -39,7 +38,7 @@ or pixmap.
 #----------------------------------------------------------------------------
 
 %package -n %{libname}
-Summary:	A library to convert wmf files. - library files
+Summary:	A library to convert wmf files
 Group:		System/Libraries
 
 %description -n %{libname}
@@ -52,7 +51,7 @@ linked with libwmf.
 #----------------------------------------------------------------------------
 
 %package -n %{litename}
-Summary:	A library to convert wmf files. - library files
+Summary:	A library to convert wmf files
 Group:		System/Libraries
 Conflicts:	%{libname} < 0.2.8.4-26
 
@@ -92,9 +91,9 @@ support.
 
 %prep
 %autosetup -p1
+autoreconf -fi -Ipatches
 
 %build
-autoreconf -i -f -Ipatches
 %configure \
 	--with-libxml2 \
 	--disable-static
@@ -103,11 +102,12 @@ autoreconf -i -f -Ipatches
 
 %install
 %make_install
-rm -rf $RPM_BUILD_ROOT%{_includedir}/libwmf/gd
+
+rm -rf %{buildroot}%{_includedir}/libwmf/gd
 find doc -name "Makefile*" -exec rm {} \;
 #we're carrying around duplicate fonts
-rm -rf $RPM_BUILD_ROOT%{_datadir}/libwmf/fonts/*afm
-rm -rf $RPM_BUILD_ROOT%{_datadir}/libwmf/fonts/*t1
-sed -i $RPM_BUILD_ROOT%{_datadir}/libwmf/fonts/fontmap -e 's#libwmf/fonts#fonts/urw-base35#g'
+rm -rf %{buildroot}%{_datadir}/libwmf/fonts/*afm
+rm -rf %{buildroot}%{_datadir}/libwmf/fonts/*t1
+sed -i %{buildroot}%{_datadir}/libwmf/fonts/fontmap -e 's#libwmf/fonts#fonts/urw-base35#g'
 # remove anything relevant to fonts.
 rm -rf %{buildroot}%{_bindir}/libwmf-fontmap %{buildroot}%{_datadir}/libwmf
