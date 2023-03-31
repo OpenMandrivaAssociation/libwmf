@@ -7,7 +7,7 @@
 Summary:	A library to convert wmf files
 Name:		libwmf
 Version:	0.2.12
-Release:	2
+Release:	3
 License:	GPLv2
 Group:		Text tools
 Url:		https://github.com/caolanm/libwmf
