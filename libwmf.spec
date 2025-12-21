@@ -14,6 +14,11 @@ Url:		https://github.com/caolanm/libwmf
 Source0:	https://github.com/caolanm/libwmf/archive/v%{version}/%{name}-%{version}.tar.gz
 Patch0:		https://github.com/caolanm/libwmf/commit/9bf7ac1a3d56ba176a6c52f792e82c86d01f42f1.patch
 Patch1:		libwmf-0.2.12-fix-build-internal-gd.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	pkgconfig(libjpeg)
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(gdk-pixbuf-2.0)
